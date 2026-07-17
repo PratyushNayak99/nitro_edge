@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0",
+  "widgets": [
+    {
+      "uri": "/hardware-hud",
+      "name": "EdgeSentinel Incident Command Center",
+      "description": "Cyberpunk incident dashboard for safe Linux edge diagnostics.",
+      "examples": [
+        {
+          "name": "Network telemetry",
+          "description": "A successful network-device health check.",
+          "data": {
+            "subsystem": "Hardware State",
+            "target": "network",
+            "output": "DEVICE      TYPE      STATE         CONNECTION\nenp1s0      ethernet  connected     edge-uplink\nwlan0       wifi      disconnected  --",
+            "success": true
+          }
+        }
+      ],
+      "tags": ["incident-response", "linux", "telemetry"]
+    }
+  ]
+}
