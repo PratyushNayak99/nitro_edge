@@ -1,7 +1,7 @@
 {
   "name": "edge-sentinel",
   "version": "1.0.0",
-  "private": true,
+  "private": false,
   "type": "module",
   "description": "AI Incident-Response Copilot for Linux Edge Devices",
   "scripts": {
@@ -17,9 +17,12 @@
   "keywords": [
     "nitrostack",
     "mcp",
-    "pizza",
-    "map",
-    "widgets"
+    "linux",
+    "edge-computing",
+    "sre",
+    "diagnostics",
+    "iot",
+    "mcp-server"
   ],
   "author": "Pratyush",
   "license": "MIT",
