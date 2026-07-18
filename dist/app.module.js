@@ -7,6 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { McpApp, Module, ConfigModule } from '@nitrostack/core';
 import { LinuxDiagnostics } from './tools/diagnostics.tool.js';
 import { SystemLogs } from './resources/syslog.resource.js';
+import { DiagnosticsPlatform } from './diagnostics/diagnostics-platform.js';
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -23,10 +24,11 @@ AppModule = __decorate([
     }),
     Module({
         name: 'edge-sentinel',
-        description: 'Secure bare-metal AI incident-response copilot for Fedora Linux edge devices',
+        description: 'Capability-aware, portable Linux edge diagnostics service',
         imports: [ConfigModule.forRoot()],
         controllers: [LinuxDiagnostics, SystemLogs],
         providers: [
+            DiagnosticsPlatform,
             LinuxDiagnostics,
             SystemLogs,
             { provide: 'OAUTH_CONFIG', useValue: { required: false, resourceUri: 'http://localhost', authorizationServers: ['http://localhost'] } },

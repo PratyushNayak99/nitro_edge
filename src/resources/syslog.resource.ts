@@ -1,23 +1,19 @@
 import { ResourceDecorator as Resource, ExecutionContext, Injectable } from '@nitrostack/core';
-import { exec } from 'child_process';
-import { promisify } from 'util';
+import { DiagnosticsPlatform } from '../diagnostics/diagnostics-platform.js';
 
-const execAsync = promisify(exec);
-
-@Injectable() // <-- FIX: Add the DI decorator here too
+@Injectable({ deps: [DiagnosticsPlatform] })
 export class SystemLogs {
+  constructor(private readonly diagnostics: DiagnosticsPlatform) {}
+
   @Resource({
     uri: 'syslog://dmesg',
     name: 'Kernel Logs (dmesg)',
-    description: 'Returns the last 50 lines of the kernel log (dmesg).',
+    description: 'Returns a fixed-size kernel log sample, or a sanitized availability message.',
     mimeType: 'text/plain',
   })
   async getDmesg(ctx: ExecutionContext) {
-    try {
-      const { stdout } = await execAsync('dmesg | tail -n 50');
-      return stdout;
-    } catch (e: any) {
-      return `Error retrieving logs: ${e.message}`;
-    }
+    const { content, result } = await this.diagnostics.kernelLogs();
+    ctx.logger.info('Kernel log resource requested', { status: result.status, strategy: result.execution.strategy });
+    return content;
   }
 }

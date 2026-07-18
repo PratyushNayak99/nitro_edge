@@ -1,1 +1,1 @@
-{"version":3,"file":"syslog.resource.d.ts","sourceRoot":"","sources":["../../src/resources/syslog.resource.ts"],"names":[],"mappings":"AAAA,OAAO,EAAiC,gBAAgB,EAAc,MAAM,kBAAkB,CAAC;AAM/F,qBACa,UAAU;IAOf,QAAQ,CAAC,GAAG,EAAE,gBAAgB;CAQrC"}
+{"version":3,"file":"syslog.resource.d.ts","sourceRoot":"","sources":["../../src/resources/syslog.resource.ts"],"names":[],"mappings":"AAAA,OAAO,EAAiC,gBAAgB,EAAc,MAAM,kBAAkB,CAAC;AAC/F,OAAO,EAAE,mBAAmB,EAAE,MAAM,wCAAwC,CAAC;AAE7E,qBACa,UAAU;IACT,OAAO,CAAC,QAAQ,CAAC,WAAW;gBAAX,WAAW,EAAE,mBAAmB;IAQvD,QAAQ,CAAC,GAAG,EAAE,gBAAgB;CAKrC"}
