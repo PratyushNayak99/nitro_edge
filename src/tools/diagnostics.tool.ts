@@ -1,8 +1,9 @@
-import { ToolDecorator as Tool, Widget, z, Injectable } from '@nitrostack/core';
+import { ToolDecorator as Tool, Widget, z, Injectable, ExecutionContext, PromptDecorator as Prompt } from '@nitrostack/core';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
 
 const execFileAsync = promisify(execFile);
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const ALLOWED_SERVICES = ['bluetooth', 'NetworkManager', 'docker', 'sshd'] as const;
 const ALLOWED_TARGETS = ['bluetooth', 'network'] as const;
@@ -75,5 +76,112 @@ export class LinuxDiagnostics {
         success: false,
       };
     }
+  }
+
+  @Tool({
+    name: 'get_system_health',
+    description: 'Safely retrieves overall edge node telemetry (uptime, load average).',
+    inputSchema: z.object({}),
+  })
+  async getSystemHealth() {
+    try {
+      const { stdout } = await execFileAsync('/usr/bin/uptime');
+
+      return {
+        subsystem: 'Global Telemetry',
+        target: 'Edge Node Load',
+        output: stdout.trim(),
+        success: true,
+      };
+    } catch (error) {
+      return {
+        subsystem: 'Global Telemetry',
+        target: 'Edge Node Load',
+        output: error instanceof Error ? error.message : String(error),
+        success: false,
+      };
+    }
+  }
+
+  @Tool({
+    name: 'audit_edge_system',
+    description: 'Run a secure, task-enabled audit of edge system services and hardware interfaces.',
+    inputSchema: z.object({
+      intensity: z.enum(['standard', 'deep']).default('standard').describe('The depth of the diagnostic scan.'),
+    }),
+    taskSupport: 'required',
+  })
+  async auditEdgeSystem(
+    args: { intensity: 'standard' | 'deep' },
+    ctx: ExecutionContext,
+  ) {
+    ctx.logger.info('Starting edge system audit', { intensity: args.intensity });
+
+    ctx.task?.updateProgress('🔍 Initializing secure telemetry link to edge kernel...');
+    await sleep(1500);
+    ctx.task?.throwIfCancelled();
+
+    ctx.task?.updateProgress('🛡️ Scanning systemd daemon statuses...');
+    let systemd: string;
+    try {
+      const { stdout } = await execFileAsync('/usr/bin/systemctl', [
+        'list-units',
+        '--state=failed',
+        '--no-pager',
+      ]);
+      systemd = stdout.trim();
+    } catch (error) {
+      systemd = error instanceof Error ? error.message : String(error);
+    }
+    await sleep(2000);
+    ctx.task?.throwIfCancelled();
+
+    ctx.task?.updateProgress('📡 Analyzing hardware interfaces...');
+    let hardware: string;
+    try {
+      const { stdout } = await execFileAsync('/usr/sbin/rfkill', ['list']);
+      hardware = stdout.trim();
+    } catch (error) {
+      hardware = error instanceof Error ? error.message : String(error);
+    }
+    await sleep(1500);
+    ctx.task?.throwIfCancelled();
+
+    ctx.task?.updateProgress('🧠 Synthesizing telemetry...');
+    await sleep(1000);
+    ctx.task?.throwIfCancelled();
+
+    return {
+      audit_id: Date.now(),
+      status: 'COMPLETED',
+      scan_depth: args.intensity,
+      findings: {
+        systemd,
+        hardware,
+      },
+      timestamp: new Date().toISOString(),
+    };
+  }
+
+  @Prompt({
+    name: 'incident_triage',
+    description: 'Run a full automated SRE diagnostic sweep on a failing subsystem.',
+    arguments: [
+      {
+        name: 'subsystem',
+        description: 'The subsystem failing',
+        required: true,
+      },
+    ],
+  })
+  async incidentTriage(args: { subsystem: string }, ctx: ExecutionContext) {
+    ctx.logger.info('Generating incident triage runbook', { subsystem: args.subsystem });
+
+    return [
+      {
+        role: 'user' as const,
+        content: `Act as EdgeSentinel, an autonomous bare-metal Linux SRE Copilot. Investigate the failing ${args.subsystem} subsystem by executing this 4-step runbook: 1. Call get_system_health. 2. Call check_hardware_state. 3. Fetch syslog://dmesg. 4. If the subsystem is hung, call manage_system_service. Then synthesize all telemetry into a concise root-cause explanation with recommended remediation.`,
+      },
+    ];
   }
 }

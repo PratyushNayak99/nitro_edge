@@ -1,4 +1,4 @@
-import { z } from '@nitrostack/core';
+import { z, ExecutionContext } from '@nitrostack/core';
 declare const ManageSystemServiceSchema: z.ZodObject<{
     service_name: z.ZodEnum<["bluetooth", "NetworkManager", "docker", "sshd"]>;
     action: z.ZodEnum<["restart", "status"]>;
@@ -29,6 +29,30 @@ export declare class LinuxDiagnostics {
         output: string;
         success: boolean;
     }>;
+    getSystemHealth(): Promise<{
+        subsystem: string;
+        target: string;
+        output: string;
+        success: boolean;
+    }>;
+    auditEdgeSystem(args: {
+        intensity: 'standard' | 'deep';
+    }, ctx: ExecutionContext): Promise<{
+        audit_id: number;
+        status: string;
+        scan_depth: "standard" | "deep";
+        findings: {
+            systemd: string;
+            hardware: string;
+        };
+        timestamp: string;
+    }>;
+    incidentTriage(args: {
+        subsystem: string;
+    }, ctx: ExecutionContext): Promise<{
+        role: "user";
+        content: string;
+    }[]>;
 }
 export {};
 //# sourceMappingURL=diagnostics.tool.d.ts.map
