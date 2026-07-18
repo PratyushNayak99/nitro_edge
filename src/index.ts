@@ -1,22 +1,15 @@
 /**
- * Pizzaz MCP Server
- * 
- * Pizza shop finder with interactive map widgets.
- * Showcases NitroStack Widget SDK features including:
- * - useTheme() for dark mode
- * - useWidgetState() for persistent favorites
- * - useDisplayMode() for fullscreen support
- * - useMaxHeight() for responsive layouts
- * - useWidgetSDK() for tool calling and navigation
+ * EdgeSentinel MCP server bootstrap.
+ *
+ * The application exposes capability-aware Linux diagnostics and a Hardware HUD
+ * widget through NitroStack.
  */
 
 import 'dotenv/config';
 import { McpApplicationFactory } from '@nitrostack/core';
 import { AppModule } from './app.module.js';
 
-/**
- * Bootstrap the application
- */
+/** Start the EdgeSentinel MCP application. */
 async function bootstrap() {
     // Create and start the MCP server
     const server = await McpApplicationFactory.create(AppModule);

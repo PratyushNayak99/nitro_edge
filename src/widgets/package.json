@@ -14,13 +14,11 @@
         "@nitrostack/widgets": "^1",
         "framer-motion": "^10.16.16",
         "lucide-react": "^0.294.0",
-        "mapbox-gl": "^3.0.1",
         "next": "^14.2.5",
         "react": "^18.3.1",
         "react-dom": "^18.3.1"
     },
     "devDependencies": {
-        "@types/mapbox-gl": "^3.0.0",
         "@types/node": "^20",
         "@types/react": "^18",
         "@types/react-dom": "^18",
